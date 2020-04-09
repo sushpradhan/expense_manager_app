@@ -38,11 +38,42 @@ router.put('/:id', (req, res)=>{
 
 })
 
+const dateconversion = (x) => {
+    var pattern = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+    var arrayDate = x.match(pattern);
+    var dt = new Date(arrayDate[3], arrayDate[2] - 1, arrayDate[1]);
+    return dt.getTime();
+}
 
+router.get('/:expenseDate', (req, res)=>{
 
+const date1 = req.body.startDate;
+const date2 = req.body.endDate;
+if((date2)!=null)
+{
+res.send(data.filter(data => dateconversion(data.expenseDate)>=dateconversion(date1) && dateconversion(data.expenseDate)<=dateconversion(date2)));
+}
+else
+{
+    res.send(data.filter(data => dateconversion(data.expenseDate)>=dateconversion(date1)));
+}
+res.end();
+})
 
+router.get('/category/:category', (req, res)=>{
+const cat = req.params.category;
+const date1 = req.body.startDate;
+const date2 = req.body.endDate;
+if(date2!=null)
+{
+res.send(data.filter(data => data.category==cat && (dateconversion(data.expenseDate)>=dateconversion(date1)) && (dateconversion(data.expenseDate)<=dateconversion(date2))));
+}
+else{
+    res.send(data.filter(data => (data.category==cat) && ((dateconversion(data.expenseDate)>=dateconversion(date1)))));
+}
+res.end();
 
-
+})
 
 
 module.exports = router;
